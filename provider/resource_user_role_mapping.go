@@ -2,7 +2,7 @@ package provider
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/tazjin/terraform-provider-keycloak/keycloak"
+	"github.com/lordbyron/terraform-provider-keycloak/keycloak"
 )
 
 func resourceUserRoleMapping() *schema.Resource {

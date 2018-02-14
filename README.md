@@ -1,8 +1,6 @@
 Terraform Keycloak Provider
 ===========================
 
-[![Build Status](https://travis-ci.org/tazjin/terraform-provider-keycloak.svg?branch=master)](https://travis-ci.org/tazjin/terraform-provider-keycloak)
-
 This project implements a [Terraform provider][] for declaratively configuring
 API resources in [Keycloak][].
 
@@ -33,7 +31,7 @@ you need to push your changes to a branch on Github.
 For "vanilla"-builds just do this:
 
 1. Install and configure Go
-2. `go get github.com/tazjin/terraform-provider-keycloak`
+2. `go get github.com/lordbyron/terraform-provider-keycloak`
 
 ## Setup instructions
 
@@ -59,6 +57,5 @@ provider "keycloak" {
 [Terraform provider]: https://www.terraform.io/docs/plugins/provider.html
 [Keycloak]: http://www.keycloak.org/
 [configure]: https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin
-[releases]: https://github.com/tazjin/terraform-provider-keycloak/releases
 [Repeatr]: http://repeatr.io/
 [formula]: terraform-provider-keycloak.frm

@@ -3,7 +3,7 @@ package provider
 import (
   "github.com/hashicorp/terraform/helper/schema"
   "github.com/hashicorp/terraform/terraform"
-  "github.com/tazjin/terraform-provider-keycloak/keycloak"
+  "github.com/lordbyron/terraform-provider-keycloak/keycloak"
 )
 
 func Provider() terraform.ResourceProvider {

@@ -2,11 +2,9 @@ package main
 
 import (
   "github.com/hashicorp/terraform/plugin"
-  "github.com/tazjin/terraform-provider-keycloak/provider"
+  "github.com/lordbyron/terraform-provider-keycloak/provider"
 )
 
 func main() {
-  plugin.Serve(&plugin.ServeOpts{
-    ProviderFunc: provider.Provider,
-  })
+  plugin.Serve(provider.Provider())
 }
