@@ -6,5 +6,7 @@ import (
 )
 
 func main() {
-  plugin.Serve(provider.Provider())
+  plugin.Serve(&plugin.ServeOpts{
+    ProviderFunc: provider.Provider,
+  })
 }
