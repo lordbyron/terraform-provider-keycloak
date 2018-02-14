@@ -9,84 +9,84 @@ type SmtpServer map[string]interface{}
 // be ignored on realm updates, which is why they are not included here.
 // http://www.keycloak.org/docs-api/3.1/rest-api/index.html#_realmrepresentation
 type Realm struct {
-	// General realm settings
-	Id      string `json:"id"`
-	Realm   string `json:"realm"`
-	Enabled bool   `json:"enabled"`
+  // General realm settings
+  Id      string `json:"id"`
+  Realm   string `json:"realm"`
+  Enabled bool   `json:"enabled"`
 
-	// Optional realm settings
-	SslRequired      string      `json:"sslRequired,omitempty"` // valid values are ALL, NONE or EXTERNAL
-	DisplayName      string      `json:"displayName,omitempty"`
-	SupportedLocales []string    `json:"supportedLocales,omitempty"`
-	DefaultRoles     []string    `json:"defaultRoles,omitempty"`
-	SmtpServer       *SmtpServer `json:"smtpServer,omitempty"`
+  // Optional realm settings
+  SslRequired      string      `json:"sslRequired,omitempty"` // valid values are ALL, NONE or EXTERNAL
+  DisplayName      string      `json:"displayName,omitempty"`
+  SupportedLocales []string    `json:"supportedLocales,omitempty"`
+  DefaultRoles     []string    `json:"defaultRoles,omitempty"`
+  SmtpServer       *SmtpServer `json:"smtpServer,omitempty"`
 
-	AccountTheme string `json:"accountTheme,omitempty"`
-	AdminTheme   string `json:"adminTheme,omitempty"`
-	EmailTheme   string `json:"emailTheme,omitempty"`
-	LoginTheme   string `json:"loginTheme,omitempty"`
+  AccountTheme string `json:"accountTheme,omitempty"`
+  AdminTheme   string `json:"adminTheme,omitempty"`
+  EmailTheme   string `json:"emailTheme,omitempty"`
+  LoginTheme   string `json:"loginTheme,omitempty"`
 
-	InternationalizationEnabled *bool `json:"internationalizationEnabled,omitempty"`
-	RegistrationAllowed         *bool `json:"registrationAllowed,omitempty"`
-	RegistrationEmailAsUsername *bool `json:"registrationEmailAsUsername,omitempty"`
-	RememberMe                  *bool `json:"rememberMe,omitempty"`
-	VerifyEmail                 *bool `json:"verifyEmail,omitempty"`
-	ResetPasswordAllowed        *bool `json:"resetPasswordAllowed,omitempty"`
-	EditUsernameAllowed         *bool `json:"editUsernameAllowed,omitempty"`
-	BruteForceProtected         *bool `json:"bruteForceProtected,omitempty"`
+  InternationalizationEnabled *bool `json:"internationalizationEnabled,omitempty"`
+  RegistrationAllowed         *bool `json:"registrationAllowed,omitempty"`
+  RegistrationEmailAsUsername *bool `json:"registrationEmailAsUsername,omitempty"`
+  RememberMe                  *bool `json:"rememberMe,omitempty"`
+  VerifyEmail                 *bool `json:"verifyEmail,omitempty"`
+  ResetPasswordAllowed        *bool `json:"resetPasswordAllowed,omitempty"`
+  EditUsernameAllowed         *bool `json:"editUsernameAllowed,omitempty"`
+  BruteForceProtected         *bool `json:"bruteForceProtected,omitempty"`
 
-	// Token & session settings
-	AccessTokenLifespan                *int `json:"accessTokenLifespan,omitempty"`
-	AccessTokenLifespanForImplicitFlow *int `json:"accessTokenLifespanForImplicitFlow,omitempty"`
-	SsoSessionIdleTimeout              *int `json:"ssoSessionIdleTimeout,omitempty"`
-	SsoSessionMaxLifespan              *int `json:"ssoSessionMaxLifespan,omitempty"`
-	OfflineSessionIdleTimeout          *int `json:"offlineSessionIdleTimeout,omitempty"`
-	AccessCodeLifespan                 *int `json:"accessCodeLifespan,omitempty"`
-	AccessCodeLifespanUserAction       *int `json:"accessCodeLifespanUserAction,omitempty"`
-	AccessCodeLifespanLogin            *int `json:"accessCodeLifespanLogin,omitempty"`
-	MaxFailureWaitSeconds              *int `json:"maxFailureWaitSeconds,omitempty"`
-	MinimumQuickLoginWaitSeconds       *int `json:"minimumQuickLoginWaitSeconds,omitempty"`
-	WaitIncrementSeconds               *int `json:"waitIncrementSeconds,omitempty"`
-	QuickLoginCheckMilliSeconds        *int `json:"quickLoginCheckMilliSeconds,omitempty"`
-	MaxDeltaTimeSeconds                *int `json:"maxDeltaTimeSeconds,omitempty"`
-	FailureFactor                      *int `json:"failureFactor,omitempty"`
+  // Token & session settings
+  AccessTokenLifespan                *int `json:"accessTokenLifespan,omitempty"`
+  AccessTokenLifespanForImplicitFlow *int `json:"accessTokenLifespanForImplicitFlow,omitempty"`
+  SsoSessionIdleTimeout              *int `json:"ssoSessionIdleTimeout,omitempty"`
+  SsoSessionMaxLifespan              *int `json:"ssoSessionMaxLifespan,omitempty"`
+  OfflineSessionIdleTimeout          *int `json:"offlineSessionIdleTimeout,omitempty"`
+  AccessCodeLifespan                 *int `json:"accessCodeLifespan,omitempty"`
+  AccessCodeLifespanUserAction       *int `json:"accessCodeLifespanUserAction,omitempty"`
+  AccessCodeLifespanLogin            *int `json:"accessCodeLifespanLogin,omitempty"`
+  MaxFailureWaitSeconds              *int `json:"maxFailureWaitSeconds,omitempty"`
+  MinimumQuickLoginWaitSeconds       *int `json:"minimumQuickLoginWaitSeconds,omitempty"`
+  WaitIncrementSeconds               *int `json:"waitIncrementSeconds,omitempty"`
+  QuickLoginCheckMilliSeconds        *int `json:"quickLoginCheckMilliSeconds,omitempty"`
+  MaxDeltaTimeSeconds                *int `json:"maxDeltaTimeSeconds,omitempty"`
+  FailureFactor                      *int `json:"failureFactor,omitempty"`
 }
 
 const (
-	realmsUri = "%s/auth/admin/realms"
-	realmUri  = "%s/auth/admin/realms/%s"
+  realmsUri = "%s/auth/admin/realms"
+  realmUri  = "%s/auth/admin/realms/%s"
 )
 
 func (c *KeycloakClient) GetRealm(id string) (*Realm, error) {
-	url := fmt.Sprintf(realmUri, c.url, id)
+  url := fmt.Sprintf(realmUri, c.url, id)
 
-	var r Realm
-	err := c.get(url, &r)
+  var r Realm
+  err := c.get(url, &r)
 
-	return &r, err
+  return &r, err
 }
 
 // This "imports" (i.e. creates) a realm from a realm representation.
 func (c *KeycloakClient) CreateRealm(r *Realm) (*Realm, error) {
-	url := fmt.Sprintf(realmsUri, c.url)
+  url := fmt.Sprintf(realmsUri, c.url)
 
-	realmLocation, err := c.post(url, *r)
-	if err != nil {
-		return nil, err
-	}
+  realmLocation, err := c.post(url, *r)
+  if err != nil {
+    return nil, err
+  }
 
-	var createdRealm Realm
-	err = c.get(realmLocation, &createdRealm)
+  var createdRealm Realm
+  err = c.get(realmLocation, &createdRealm)
 
-	return &createdRealm, err
+  return &createdRealm, err
 }
 
 func (c *KeycloakClient) UpdateRealm(r *Realm) error {
-	url := fmt.Sprintf(realmUri, c.url, r.Id)
-	return c.put(url, *r)
+  url := fmt.Sprintf(realmUri, c.url, r.Id)
+  return c.put(url, *r)
 }
 
 func (c *KeycloakClient) DeleteRealm(id string) error {
-	url := fmt.Sprintf(realmUri, c.url, id)
-	return c.delete(url, nil)
+  url := fmt.Sprintf(realmUri, c.url, id)
+  return c.delete(url, nil)
 }
