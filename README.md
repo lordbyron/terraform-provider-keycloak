@@ -38,10 +38,19 @@ For "vanilla"-builds just do this:
 The Keycloak instance to manage needs to be configured with a client that has
 permission to change the resources in Keycloak.
 
-If you want to create and manage realms directly you should grant this client
-the `admin` role.
+Create a Client in Keycloak with appropriate settings:
+```
+Client Protocol: openid-connect
+Access Type: confidential
+Service Accounts Enabled: On
+(others disabled)
+Scope/ Full Scope Allowed: Off
+Scope/ Assigned Roles: admin
+Service Account Roles/ Assigned Roles: admin, offline_access, uma_authorization
+```
 
-The provider needs to be configured with credentials to access the API:
+
+The provider needs to be configured with credentials to access the API (see Credentials tab on the Client):
 
 ```
 provider "keycloak" {

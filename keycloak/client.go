@@ -9,16 +9,19 @@ import (
 // http://www.keycloak.org/docs-api/3.1/rest-api/index.html#_clientrepresentation
 
 type Client struct {
-  Id                      string   `json:"id,omitempty"`
-  ClientId                string   `json:"clientId"`
-  Enabled                 bool     `json:"enabled"`
-  ClientAuthenticatorType string   `json:"clientAuthenticatorType,omitempty"`
-  RedirectUris            []string `json:"redirectUris"`
-  Protocol                string   `json:"protocol,omitempty"`
-  PublicClient            bool     `json:"publicClient"`
-  BearerOnly              bool     `json:"bearerOnly"`
-  ServiceAccountsEnabled  bool     `json:"serviceAccountsEnabled"`
-  WebOrigins              []string `json:"webOrigins"`
+  Id                      string            `json:"id,omitempty"`
+  ClientId                string            `json:"clientId"`
+  Enabled                 bool              `json:"enabled"`
+  ClientAuthenticatorType string            `json:"clientAuthenticatorType,omitempty"`
+  RedirectUris            []string          `json:"redirectUris"`
+  Protocol                string            `json:"protocol,omitempty"`
+  PublicClient            bool              `json:"publicClient"`
+  BearerOnly              bool              `json:"bearerOnly"`
+  ServiceAccountsEnabled  bool              `json:"serviceAccountsEnabled"`
+  WebOrigins              []string          `json:"webOrigins"`
+  BaseUrl                 string            `json:"baseUrl"`
+  FullScopeAllowed        bool              `json:"fullScopeAllowed"`
+  Attributes              map[string]interface{} `json:"attributes,omitempty"`
 }
 
 type ClientSecret struct {

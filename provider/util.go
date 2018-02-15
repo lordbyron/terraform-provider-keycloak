@@ -10,6 +10,10 @@ func realm(d *schema.ResourceData) string {
   return d.Get("realm").(string)
 }
 
+func client(d *schema.ResourceData) string {
+  return d.Get("client_id").(string)
+}
+
 func getOptionalBool(d *schema.ResourceData, key string) *bool {
   if v, present := d.GetOk(key); present {
     b := v.(bool)
@@ -63,4 +67,14 @@ func splitRealmId(raw string) (string, string, error) {
   }
 
   return split[0], split[1], nil
+}
+
+func splitRealmClientId(raw string) (string, string, string, error) {
+  split := strings.Split(raw, ".")
+
+  if len(split) != 3 {
+    return "", "", "", fmt.Errorf("Import ID must be specified as '${realm}.${client_id}.${resource_id}' (n.b. client_id is not client name)")
+  }
+
+  return split[0], split[1], split[2], nil
 }

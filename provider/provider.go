@@ -14,6 +14,7 @@ func Provider() terraform.ResourceProvider {
       "keycloak_client":            resourceClient(),
       "keycloak_user_role_mapping": resourceUserRoleMapping(),
       "keycloak_realm":             resourceRealm(),
+      "keycloak_protocol_mapper":   resourceProtocolMapper(),
     },
   }
 }

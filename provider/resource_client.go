@@ -71,6 +71,20 @@ func resourceClient() *schema.Resource {
         Optional: true,
         Elem:     &schema.Schema{Type: schema.TypeString},
       },
+      "base_url": {
+        Type:     schema.TypeString,
+        Optional: true,
+        Default:  "",
+      },
+      "full_scope_allowed": {
+        Type:     schema.TypeBool,
+        Optional: true,
+        Default:  true,
+      },
+      "attributes": {
+        Type:     schema.TypeMap,
+        Optional: true,
+      },
 
       // Computed fields (i.e. things looked up in Keycloak after client creation)
       "client_secret": {
@@ -109,6 +123,7 @@ func resourceClientRead(d *schema.ResourceData, m interface{}) error {
 
   clientToResourceData(client, d)
 
+  /** Get computed fields **/
   // Look up client secret in addition
   secret, err := c.GetClientSecret(d.Id(), realm(d))
   if err != nil {
@@ -154,9 +169,11 @@ func resourceClientDelete(d *schema.ResourceData, m interface{}) error {
   return apiClient.DeleteClient(d.Id(), realm(d))
 }
 
+// Turns resource.tf files into the Client struct
 func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
   redirectUris := []string{}
   webOrigins := []string{}
+  attributes := map[string]interface{}{}
 
   for _, uri := range d.Get("redirect_uris").([]interface{}) {
     redirectUris = append(redirectUris, uri.(string))
@@ -166,6 +183,13 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
   if present {
     for _, origin := range rawOrigins.([]interface{}) {
       webOrigins = append(webOrigins, origin.(string))
+    }
+  }
+
+  rawAttributes, present := d.GetOk("attributes")
+  if (present) {
+    for k, v := range rawAttributes.(map[string]interface{}) {
+      attributes[k] = v
     }
   }
 
@@ -179,6 +203,9 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
     BearerOnly:              d.Get("bearer_only").(bool),
     ServiceAccountsEnabled:  d.Get("service_accounts_enabled").(bool),
     WebOrigins:              webOrigins,
+    BaseUrl:                 d.Get("base_url").(string),
+    FullScopeAllowed:        d.Get("full_scope_allowed").(bool),
+    Attributes:              attributes,
   }
 
   if !d.IsNewResource() {
@@ -188,6 +215,7 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
   return c
 }
 
+// Turns the struct into the internal representation
 func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
   d.Set("client_id", c.ClientId)
   d.Set("enabled", c.Enabled)
@@ -198,4 +226,14 @@ func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
   d.Set("bearer_only", c.BearerOnly)
   d.Set("service_accounts_enabled", c.ServiceAccountsEnabled)
   d.Set("web_origins", c.WebOrigins)
+  d.Set("base_url", c.BaseUrl)
+  d.Set("full_scope_allowed", c.FullScopeAllowed)
+  d.Set("attributes", c.Attributes)
+}
+
+func defaultClientAttributes() map[string]interface{} {
+  return map[string]interface{}{
+    "saml.assertion.signature": true,
+    "xray": "foobar",
+  }
 }
