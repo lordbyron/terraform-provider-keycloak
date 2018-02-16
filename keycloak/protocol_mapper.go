@@ -55,3 +55,16 @@ func (c *KeycloakClient) DeleteProtocolMapper(id, realm, clientId string) error 
   url := fmt.Sprintf(mapperUri, c.url, realm, clientId, id)
   return c.delete(url, nil)
 }
+
+func (c *KeycloakClient) ListProtocolMappers(realm, clientId string) (*[]ProtocolMapper, error) {
+  url := fmt.Sprintf(mappersUri, c.url, realm, clientId)
+
+  var pms []ProtocolMapper
+  err := c.get(url, &pms)
+
+  if err != nil {
+    return nil, err
+  }
+
+  return &pms, nil
+}

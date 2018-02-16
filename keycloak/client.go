@@ -74,6 +74,20 @@ func (c *KeycloakClient) CreateClient(client *Client, realm string) (*Client, er
   var createdClient Client
   err = c.get(clientLocation, &createdClient)
 
+  // Creating a client automatically creates a protocol mapper, which we
+  // don't want. So delete it!
+  pms, err := c.ListProtocolMappers(realm, createdClient.Id)
+  if err != nil {
+    return &createdClient, err
+  }
+  for _, pm := range *pms {
+    err = c.DeleteProtocolMapper(pm.Id, realm, createdClient.Id)
+    if err != nil {
+      return &createdClient, err
+    }
+  }
+
+
   return &createdClient, err
 }
 
