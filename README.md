@@ -6,7 +6,9 @@ API resources in [Keycloak][].
 
 ## Status
 
-This provider can currently manage Keycloak `client` resources and user-role mappings.
+This provider can currently manage Keycloak `client` resources, roles, and
+protocol mappings. This is enough to set up Keycloak as the SAML provider for
+aws (see examples).
 
 Not all fields of those resources are supported at the moment.
 
