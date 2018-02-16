@@ -12,8 +12,8 @@ func Provider() terraform.ResourceProvider {
     ConfigureFunc: schema.ConfigureFunc(keycloakProviderSetup),
     ResourcesMap: map[string]*schema.Resource{
       "keycloak_client":            resourceClient(),
-      "keycloak_user_role_mapping": resourceUserRoleMapping(),
       "keycloak_realm":             resourceRealm(),
+      "keycloak_role":              resourceRole(),
       "keycloak_protocol_mapper":   resourceProtocolMapper(),
     },
   }
@@ -32,6 +32,7 @@ func keycloakProviderSchema() map[string]*schema.Schema {
       Required:    true,
       Type:        schema.TypeString,
       DefaultFunc: schema.EnvDefaultFunc("KEYCLOAK_CLIENT_SECRET", nil),
+      Sensitive:   true,
     },
     "api_base": {
       Required:    true,
@@ -49,10 +50,12 @@ func keycloakProviderSchema() map[string]*schema.Schema {
 // This method attempts to log in to Keycloak with the provided client credentials
 // and returns a configured Keycloak client.
 func keycloakProviderSetup(data *schema.ResourceData) (interface{}, error) {
-  return keycloak.Login(
+  c := keycloak.NewKeycloakClient(
     data.Get("client_id").(string),
     data.Get("client_secret").(string),
     data.Get("api_base").(string),
     data.Get("realm").(string),
   )
+  err := c.Login()
+  return c, err
 }

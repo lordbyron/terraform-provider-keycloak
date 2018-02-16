@@ -34,6 +34,7 @@ const (
   clientList      = "%s/auth/admin/realms/%s/clients"
   clientSecretUri = "%s/auth/admin/realms/%s/clients/%s/client-secret"
   clientUserUri   = "%s/auth/admin/realms/%s/clients/%s/service-account-user"
+  clientSamlDescUri = "%s/auth/admin/realms/%s/clients/%s/installation/providers/saml-idp-descriptor"
 )
 
 func (c *KeycloakClient) GetClient(id string, realm string) (*Client, error) {
@@ -92,7 +93,7 @@ func (c *KeycloakClient) DeleteClient(id string, realm string) error {
   return c.delete(url, nil)
 }
 
-func (c *KeycloakClient) GetClientServiceAccountUser(id string, realm string) (*User, error) {
+func (c *KeycloakClient) GetClientServiceAccountUser(id, realm string) (*User, error) {
   url := fmt.Sprintf(clientUserUri, c.url, realm, id)
 
   var user User
@@ -103,4 +104,17 @@ func (c *KeycloakClient) GetClientServiceAccountUser(id string, realm string) (*
   }
 
   return &user, nil
+}
+
+func (c *KeycloakClient) GetClientInstallationSamlDesc(id, realm string) (string, error) {
+  url := fmt.Sprintf(clientSamlDescUri, c.url, realm, id)
+
+  var installation []byte
+  err := c.getRaw(url, &installation)
+
+  if err != nil {
+    return "", err
+  }
+
+  return string(installation), nil
 }

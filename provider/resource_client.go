@@ -88,10 +88,16 @@ func resourceClient() *schema.Resource {
 
       // Computed fields (i.e. things looked up in Keycloak after client creation)
       "client_secret": {
+        Type:      schema.TypeString,
+        Computed:  true,
+        Sensitive: true,
+      },
+      "service_account_user_id": {
         Type:     schema.TypeString,
         Computed: true,
       },
-      "service_account_user_id": {
+      // only available if protocol is `saml`
+      "saml_idp_descriptor_xml": {
         Type:     schema.TypeString,
         Computed: true,
       },
@@ -139,6 +145,15 @@ func resourceClientRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("service_account_user_id", user.Id)
+  }
+
+  if client.Protocol == "saml" {
+    installation, err := c.GetClientInstallationSamlDesc(d.Id(), realm(d))
+    if err != nil {
+      return err
+    }
+
+    d.Set("saml_idp_descriptor_xml", installation)
   }
 
   return nil
@@ -215,7 +230,7 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
   return c
 }
 
-// Turns the struct into the internal representation
+// Turns the struct (from a GET) into the internal representation
 func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
   d.Set("client_id", c.ClientId)
   d.Set("enabled", c.Enabled)

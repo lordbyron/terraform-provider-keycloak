@@ -1,6 +1,8 @@
 package keycloak
 
-import "fmt"
+import (
+  "fmt"
+)
 
 // The available keys of the SMTP server map are not documented in Keycloak's API docs.
 type SmtpServer map[string]interface{}
@@ -71,6 +73,14 @@ func (c *KeycloakClient) CreateRealm(r *Realm) (*Realm, error) {
   url := fmt.Sprintf(realmsUri, c.url)
 
   realmLocation, err := c.post(url, *r)
+  if err != nil {
+    return nil, err
+  }
+
+  // For some reason, keycloak authorizes all the realms you can see at the
+  // beginning of the session, so if you create a new realm you will get a
+  // 403 trying to access it. Need to re-auth
+  err = c.Login()
   if err != nil {
     return nil, err
   }

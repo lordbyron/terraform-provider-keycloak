@@ -10,8 +10,21 @@ import (
 
 // An authenticated Keycloak API client
 type KeycloakClient struct {
-  token string
-  url   string
+  token  string
+  url    string
+  // used to login (and re-login)
+  id     string
+  secret string
+  realm  string
+}
+
+func NewKeycloakClient(id, secret, baseUrl, realm string) (*KeycloakClient) {
+  return &KeycloakClient{
+    id: id,
+    secret: secret,
+    url: baseUrl,
+    realm: realm,
+  }
 }
 
 // A function that mimics the default HTTP client 'Do' but authenticates all requests.
@@ -24,18 +37,10 @@ func (c *KeycloakClient) do(req *http.Request) (*http.Response, error) {
 // The result is decoded
 // Go's type system is not able to type-check this function, so be careful - footguns ahead.
 func (c *KeycloakClient) get(url string, v interface{}) error {
-  req, _ := http.NewRequest("GET", url, nil)
-  resp, err := c.do(req)
-
+  var body []byte
+  err := c.getRaw(url, &body)
   if err != nil {
     return err
-  }
-
-  defer resp.Body.Close()
-  body, _ := ioutil.ReadAll(resp.Body)
-
-  if resp.StatusCode != 200 {
-    return fmt.Errorf("Could not get %s: %s (%d)", url, string(body), resp.StatusCode)
   }
 
   err = json.Unmarshal(body, v)
@@ -44,6 +49,23 @@ func (c *KeycloakClient) get(url string, v interface{}) error {
     return err
   }
 
+  return nil
+}
+
+func (c* KeycloakClient) getRaw(url string, body *[]byte) error {
+  req, _ := http.NewRequest("GET", url, nil)
+  resp, err := c.do(req)
+
+  if err != nil {
+    return err
+  }
+
+  defer resp.Body.Close()
+  *body, _ = ioutil.ReadAll(resp.Body)
+
+  if resp.StatusCode != 200 {
+    return fmt.Errorf("Could not get %s: %s (%d)", url, string(*body), resp.StatusCode)
+  }
   return nil
 }
 

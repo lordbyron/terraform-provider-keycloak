@@ -22,36 +22,33 @@ const (
 )
 
 // Attempt to login to Keycloak with the provided information.
-func Login(id string, secret string, baseUrl string, realm string) (*KeycloakClient, error) {
-  url := fmt.Sprintf(tokenEndpoint, baseUrl, realm)
+func (c *KeycloakClient) Login() error {
+  url := fmt.Sprintf(tokenEndpoint, c.url, c.realm)
 
   req, _ := http.NewRequest("POST", url, bytes.NewBufferString(loginBody))
-  req.Header.Set("Authorization", createBasicAuthorizationHeader(id, secret))
+  req.Header.Set("Authorization", createBasicAuthorizationHeader(c.id, c.secret))
   req.Header.Set("Content-Type", formContentType)
 
   resp, err := http.DefaultClient.Do(req)
   if err != nil {
-    return nil, err
+    return err
   }
 
   defer resp.Body.Close()
   body, _ := ioutil.ReadAll(resp.Body)
 
   if resp.StatusCode != 200 {
-    return nil, fmt.Errorf("Keycloak login failed: %s (%d)", string(body), resp.StatusCode)
+    return fmt.Errorf("Keycloak login failed: %s (%d)", string(body), resp.StatusCode)
   }
 
   var t tokenResponse
   err = json.Unmarshal(body, &t)
   if err != nil {
-    return nil, err
+    return err
   }
 
-  client := &KeycloakClient{
-    token: t.AccessToken,
-    url:   baseUrl,
-  }
-  return client, nil
+  c.token = t.AccessToken
+  return nil
 }
 
 func createBasicAuthorizationHeader(id string, secret string) string {
