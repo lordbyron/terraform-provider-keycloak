@@ -2,6 +2,7 @@ package keycloak
 
 import (
   "fmt"
+  neturl "net/url"
 )
 
 // Does not implement composite roles at this timej
@@ -48,6 +49,11 @@ func (c *KeycloakClient) createRole(role *Role, url string) (*Role, error) {
   if err != nil {
     return nil, err
   }
+
+  // if the roel name contains a slash, the location gets messed up (because
+  // slashes dont get URL encoded by keycloak as they should
+  suffix := roleLocation[len(url)+1:]
+  roleLocation = url + "/" + neturl.QueryEscape(suffix)
 
   var createdRole Role
   err = c.get(roleLocation, &createdRole)
