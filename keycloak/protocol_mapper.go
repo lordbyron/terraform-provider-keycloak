@@ -1,70 +1,70 @@
 package keycloak
 
 import (
-  "fmt"
+	"fmt"
 )
 
 type ProtocolMapper struct {
-  Id              string                 `json:"id,omitempty"`
-  Name            string                 `json:"name"`
-  Protocol        string                 `json:"protocol,omitempty"`
-  ProtocolMapper  string                 `json:"protocolMapper,omitempty"`
-  ConsentRequired bool                   `json:"consentRequired,omitempty"`
-  ConsentText     string                 `json:"consentText,omitempty"`
-  Config          map[string]interface{} `json:"config,omitempty"`
+	Id              string                 `json:"id,omitempty"`
+	Name            string                 `json:"name"`
+	Protocol        string                 `json:"protocol,omitempty"`
+	ProtocolMapper  string                 `json:"protocolMapper,omitempty"`
+	ConsentRequired bool                   `json:"consentRequired,omitempty"`
+	ConsentText     string                 `json:"consentText,omitempty"`
+	Config          map[string]interface{} `json:"config,omitempty"`
 }
 
 const (
-  mappersUri = "%s/auth/admin/realms/%s/clients/%s/protocol-mappers/models"
-  mapperUri = "%s/auth/admin/realms/%s/clients/%s/protocol-mappers/models/%s"
+	mappersUri = "%s/auth/admin/realms/%s/clients/%s/protocol-mappers/models"
+	mapperUri  = "%s/auth/admin/realms/%s/clients/%s/protocol-mappers/models/%s"
 )
 
 func (c *KeycloakClient) GetProtocolMapper(id, realm, clientId string) (*ProtocolMapper, error) {
-  url := fmt.Sprintf(mapperUri, c.url, realm, clientId, id)
+	url := fmt.Sprintf(mapperUri, c.url, realm, clientId, id)
 
-  var pm ProtocolMapper
-  err := c.get(url, &pm)
+	var pm ProtocolMapper
+	err := c.get(url, &pm)
 
-  if err != nil {
-    return nil, err
-  }
+	if err != nil {
+		return nil, err
+	}
 
-  return &pm, nil
+	return &pm, nil
 }
 
 func (c *KeycloakClient) CreateProtocolMapper(pm *ProtocolMapper, realm, clientId string) (*ProtocolMapper, error) {
-  url := fmt.Sprintf(mappersUri, c.url, realm, clientId)
+	url := fmt.Sprintf(mappersUri, c.url, realm, clientId)
 
-  mapperLocation, err := c.post(url, *pm)
-  if err != nil {
-    return nil, err
-  }
+	mapperLocation, err := c.post(url, *pm)
+	if err != nil {
+		return nil, err
+	}
 
-  var createdMapper ProtocolMapper
-  err = c.get(mapperLocation, &createdMapper)
+	var createdMapper ProtocolMapper
+	err = c.get(mapperLocation, &createdMapper)
 
-  return &createdMapper, err
+	return &createdMapper, err
 }
 
 func (c *KeycloakClient) UpdateProtocolMapper(pm *ProtocolMapper, realm, clientId string) error {
-  url := fmt.Sprintf(mapperUri, c.url, realm, clientId, pm.Id)
-  return c.put(url, *pm)
+	url := fmt.Sprintf(mapperUri, c.url, realm, clientId, pm.Id)
+	return c.put(url, *pm)
 }
 
 func (c *KeycloakClient) DeleteProtocolMapper(id, realm, clientId string) error {
-  url := fmt.Sprintf(mapperUri, c.url, realm, clientId, id)
-  return c.delete(url, nil)
+	url := fmt.Sprintf(mapperUri, c.url, realm, clientId, id)
+	return c.delete(url, nil)
 }
 
 func (c *KeycloakClient) ListProtocolMappers(realm, clientId string) (*[]ProtocolMapper, error) {
-  url := fmt.Sprintf(mappersUri, c.url, realm, clientId)
+	url := fmt.Sprintf(mappersUri, c.url, realm, clientId)
 
-  var pms []ProtocolMapper
-  err := c.get(url, &pms)
+	var pms []ProtocolMapper
+	err := c.get(url, &pms)
 
-  if err != nil {
-    return nil, err
-  }
+	if err != nil {
+		return nil, err
+	}
 
-  return &pms, nil
+	return &pms, nil
 }
