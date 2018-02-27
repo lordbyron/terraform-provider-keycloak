@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -29,6 +30,7 @@ func NewKeycloakClient(id, secret, baseUrl, realm string) *KeycloakClient {
 
 // A function that mimics the default HTTP client 'Do' but authenticates all requests.
 func (c *KeycloakClient) do(req *http.Request) (*http.Response, error) {
+	log.Println(req.Method + " " + req.URL.String())
 	req.Header.Set("Authorization", "Bearer "+c.token)
 	return http.DefaultClient.Do(req)
 }
