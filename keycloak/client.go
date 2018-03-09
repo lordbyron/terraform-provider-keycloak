@@ -14,12 +14,14 @@ type Client struct {
 	Enabled                 bool                   `json:"enabled"`
 	ClientAuthenticatorType string                 `json:"clientAuthenticatorType,omitempty"`
 	RedirectUris            []string               `json:"redirectUris"`
+	RootUrl                 string                 `json:"rootUrl"`
+	AdminUrl                string                 `json:"adminUrl"`
+	BaseUrl                 string                 `json:"baseUrl"`
 	Protocol                string                 `json:"protocol,omitempty"`
 	PublicClient            bool                   `json:"publicClient"`
 	BearerOnly              bool                   `json:"bearerOnly"`
 	ServiceAccountsEnabled  bool                   `json:"serviceAccountsEnabled"`
 	WebOrigins              []string               `json:"webOrigins"`
-	BaseUrl                 string                 `json:"baseUrl"`
 	FullScopeAllowed        bool                   `json:"fullScopeAllowed"`
 	Attributes              map[string]interface{} `json:"attributes,omitempty"`
 }

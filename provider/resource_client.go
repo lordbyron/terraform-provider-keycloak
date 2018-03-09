@@ -71,6 +71,16 @@ func resourceClient() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"root_url": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
+			"admin_url": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "",
+			},
 			"base_url": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -218,6 +228,8 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
 		BearerOnly:              d.Get("bearer_only").(bool),
 		ServiceAccountsEnabled:  d.Get("service_accounts_enabled").(bool),
 		WebOrigins:              webOrigins,
+		RootUrl:                 d.Get("root_url").(string),
+		AdminUrl:                d.Get("admin_url").(string),
 		BaseUrl:                 d.Get("base_url").(string),
 		FullScopeAllowed:        d.Get("full_scope_allowed").(bool),
 		Attributes:              attributes,
@@ -241,6 +253,8 @@ func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
 	d.Set("bearer_only", c.BearerOnly)
 	d.Set("service_accounts_enabled", c.ServiceAccountsEnabled)
 	d.Set("web_origins", c.WebOrigins)
+	d.Set("root_url", c.RootUrl)
+	d.Set("admin_url", c.AdminUrl)
 	d.Set("base_url", c.BaseUrl)
 	d.Set("full_scope_allowed", c.FullScopeAllowed)
 	d.Set("attributes", c.Attributes)
