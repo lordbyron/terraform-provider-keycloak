@@ -66,6 +66,21 @@ func resourceClient() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"direct_access_grants_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"implicit_flow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+			"standard_flow_enabled": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  true,
+			},
 			"web_origins": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -219,20 +234,23 @@ func resourceDataToClient(d *schema.ResourceData) keycloak.Client {
 	}
 
 	c := keycloak.Client{
-		ClientId:                d.Get("client_id").(string),
-		Enabled:                 d.Get("enabled").(bool),
-		ClientAuthenticatorType: d.Get("client_authenticator_type").(string),
-		RedirectUris:            redirectUris,
-		Protocol:                d.Get("protocol").(string),
-		PublicClient:            d.Get("public_client").(bool),
-		BearerOnly:              d.Get("bearer_only").(bool),
-		ServiceAccountsEnabled:  d.Get("service_accounts_enabled").(bool),
-		WebOrigins:              webOrigins,
-		RootUrl:                 d.Get("root_url").(string),
-		AdminUrl:                d.Get("admin_url").(string),
-		BaseUrl:                 d.Get("base_url").(string),
-		FullScopeAllowed:        d.Get("full_scope_allowed").(bool),
-		Attributes:              attributes,
+		ClientId:                  d.Get("client_id").(string),
+		Enabled:                   d.Get("enabled").(bool),
+		ClientAuthenticatorType:   d.Get("client_authenticator_type").(string),
+		RedirectUris:              redirectUris,
+		Protocol:                  d.Get("protocol").(string),
+		PublicClient:              d.Get("public_client").(bool),
+		BearerOnly:                d.Get("bearer_only").(bool),
+		ServiceAccountsEnabled:    d.Get("service_accounts_enabled").(bool),
+		DirectAccessGrantsEnabled: d.Get("direct_access_grants_enabled").(bool),
+		ImplicitFlowEnabled:       d.Get("implicit_flow_enabled").(bool),
+		StandardFlowEnabled:       d.Get("standard_flow_enabled").(bool),
+		WebOrigins:                webOrigins,
+		RootUrl:                   d.Get("root_url").(string),
+		AdminUrl:                  d.Get("admin_url").(string),
+		BaseUrl:                   d.Get("base_url").(string),
+		FullScopeAllowed:          d.Get("full_scope_allowed").(bool),
+		Attributes:                attributes,
 	}
 
 	if !d.IsNewResource() {
@@ -252,6 +270,9 @@ func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
 	d.Set("public_client", c.PublicClient)
 	d.Set("bearer_only", c.BearerOnly)
 	d.Set("service_accounts_enabled", c.ServiceAccountsEnabled)
+	d.Set("direct_access_grants_enabled", c.DirectAccessGrantsEnabled)
+	d.Set("implicit_flow_enabled", c.ImplicitFlowEnabled)
+	d.Set("standard_flow_enabled", c.StandardFlowEnabled)
 	d.Set("web_origins", c.WebOrigins)
 	d.Set("root_url", c.RootUrl)
 	d.Set("admin_url", c.AdminUrl)
