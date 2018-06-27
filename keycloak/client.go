@@ -68,6 +68,19 @@ func (c *KeycloakClient) GetClientSecret(id string, realm string) (*ClientSecret
 	return &secret, nil
 }
 
+func (c *KeycloakClient) ListClients(realm string) ([]*Client, error) {
+	url := fmt.Sprintf(clientList, c.url, realm)
+
+	var clients []*Client
+	err := c.get(url, &clients)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return clients, nil
+}
+
 // Attempt to create a Keycloak client and return the created client.
 func (c *KeycloakClient) CreateClient(client *Client, realm string) (*Client, error) {
 	url := fmt.Sprintf(clientList, c.url, realm)

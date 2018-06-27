@@ -10,6 +10,9 @@ func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema:        keycloakProviderSchema(),
 		ConfigureFunc: schema.ConfigureFunc(keycloakProviderSetup),
+		DataSourcesMap: map[string]*schema.Resource{
+			"keycloak_client": dataSourceClient(),
+		},
 		ResourcesMap: map[string]*schema.Resource{
 			"keycloak_client":          resourceClient(),
 			"keycloak_realm":           resourceRealm(),
