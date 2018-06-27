@@ -12,6 +12,8 @@ aws (see examples).
 
 Not all fields of those resources are supported at the moment.
 
+There is a single Data Source, `keycloak_client`, which can simply be used to change between client_id (which is name) and guid (which is id).
+
 ## Installation
 
 Grab a binary release for your operating system from the [releases][] page and drop it into
@@ -23,12 +25,6 @@ files and `terraform providers` to check that it has been loaded correctly.
 **Note**: The targeted version of Terraform is currently **v0.10.0**.
 
 ## Building from source
-
-To guarantee that the binaries you are building are reproducible, you should consider using
-[Repeatr][] to perform source builds. Repeatr is used for version pinning (see the [formula][]).
-
-Repeatr will check out source code from Github, so in order to build your own forks this way
-you need to push your changes to a branch on Github.
 
 For "vanilla"-builds just do this:
 
@@ -51,7 +47,6 @@ Scope/ Assigned Roles: admin
 Service Account Roles/ Assigned Roles: admin, offline_access, uma_authorization
 ```
 
-
 The provider needs to be configured with credentials to access the API (see Credentials tab on the Client):
 
 ```
@@ -68,5 +63,3 @@ provider "keycloak" {
 [Terraform provider]: https://www.terraform.io/docs/plugins/provider.html
 [Keycloak]: http://www.keycloak.org/
 [configure]: https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin
-[Repeatr]: http://repeatr.io/
-[formula]: terraform-provider-keycloak.frm
