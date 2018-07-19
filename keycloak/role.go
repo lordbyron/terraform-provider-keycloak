@@ -51,9 +51,15 @@ func (c *KeycloakClient) createRole(role *Role, url string) (*Role, error) {
 	}
 
 	// if the roel name contains a slash, the location gets messed up (because
-	// slashes dont get URL encoded by keycloak as they should
+	// slashes dont get URL encoded by keycloak as they should. this will break
+	// if the role name has a URL escaped character in it...
 	suffix := roleLocation[len(url)+1:]
-	roleLocation = url + "/" + neturl.QueryEscape(suffix)
+	suffix, err = neturl.QueryUnescape(suffix)
+	if err != nil {
+		return nil, err
+	}
+	suffix = neturl.QueryEscape(suffix)
+	roleLocation = url + "/" + suffix
 
 	var createdRole Role
 	err = c.get(roleLocation, &createdRole)
