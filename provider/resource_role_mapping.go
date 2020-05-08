@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/lordbyron/terraform-provider-keycloak/keycloak"
 )
@@ -93,7 +92,10 @@ func resourceRoleMapRead(d *schema.ResourceData, m interface{}) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("No role mapping found for realm: %s, user: %s, group: %s, client: %s, role: %s", rm.Realm, rm.UserId, rm.GroupId, rm.ClientId, rm.RoleId)
+	//return fmt.Errorf("No role mapping found for realm: %s, user: %s, group: %s, client: %s, role: %s", rm.Realm, rm.UserId, rm.GroupId, rm.ClientId, rm.RoleId)
+	// Nothing was found, so return no state
+	d.SetId("")
+	return nil
 }
 
 func resourceRoleMapCreate(d *schema.ResourceData, m interface{}) error {
