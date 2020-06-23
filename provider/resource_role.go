@@ -68,7 +68,9 @@ func resourceRoleRead(d *schema.ResourceData, m interface{}) error {
 
 	role, err := c.GetRole(d.Id(), realm(d))
 	if err != nil {
-		return err
+		// Nothing was found, so just always recreate (instead of erroring)
+		d.SetId("")
+		return nil
 	}
 
 	roleToResourceData(role, d)
