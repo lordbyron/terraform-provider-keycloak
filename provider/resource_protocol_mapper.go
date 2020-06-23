@@ -76,7 +76,9 @@ func resourceProtocolMapperRead(d *schema.ResourceData, m interface{}) error {
 
 	pm, err := c.GetProtocolMapper(d.Id(), realm(d), client(d))
 	if err != nil {
-		return err
+		// Nothing was found, so just always recreate (instead of erroring)
+		d.SetId("")
+		return nil
 	}
 
 	protocolMapperToResourceData(pm, d)
