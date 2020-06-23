@@ -149,7 +149,9 @@ func resourceClientRead(d *schema.ResourceData, m interface{}) error {
 
 	client, err := c.GetClient(d.Id(), realm(d))
 	if err != nil {
-		return err
+		// Nothing was found, so just always recreate (instead of erroring)
+		d.SetId("")
+		return nil
 	}
 
 	clientToResourceData(client, d)
@@ -284,6 +286,6 @@ func clientToResourceData(c *keycloak.Client, d *schema.ResourceData) {
 func defaultClientAttributes() map[string]interface{} {
 	return map[string]interface{}{
 		"saml.assertion.signature": true,
-		"xray": "foobar",
+		"xray":                     "foobar",
 	}
 }
